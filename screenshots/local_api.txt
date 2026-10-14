@@ -1,4 +1,5 @@
-Command: python local_api.py
+2026-10-14T03:13:50-05:00
+> python local_api.py
 
 GET Status Code: 200
 Result: Hello from the Census income prediction API!

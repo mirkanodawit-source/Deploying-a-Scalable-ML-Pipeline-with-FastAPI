@@ -1,45 +1,25 @@
-Command: python -m pytest -v --color=no
+2026-10-14T03:11:52-05:00
+> python -m pytest test_ml.py -v --color=no
 
 ============================= test session starts =============================
 platform win32 -- Python 3.11.16, pytest-8.3.5, pluggy-1.6.0 -- C:\Users\BSD\Documents\Dave\ml-model-fastapi\.venv\Scripts\python.exe
 cachedir: .pytest_cache
 rootdir: C:\Users\BSD\Documents\Dave\ml-model-fastapi
 configfile: pytest.ini
-testpaths: test_ml.py, tests
 plugins: anyio-4.15.1
-collecting ... collected 24 items
+collecting ... collected 10 items
 
-test_ml.py::test_metrics_known_values PASSED                             [  4%]
-test_ml.py::test_training_learns_separable_data PASSED                   [  8%]
-test_ml.py::test_model_round_trip_preserves_predictions PASSED           [ 12%]
-test_ml.py::test_inference_never_refits_and_handles_unknown_categories PASSED [ 16%]
-test_ml.py::test_column_order_does_not_change_features PASSED            [ 20%]
-test_ml.py::test_all_slice_counts_and_metrics_match_manual_calculation PASSED [ 25%]
-test_ml.py::test_missing_encoder_rejected PASSED                         [ 29%]
-test_ml.py::test_missing_feature_rejected PASSED                         [ 33%]
-test_ml.py::test_nonfinite_numeric_rejected PASSED                       [ 37%]
-test_ml.py::test_unknown_label_rejected PASSED                           [ 41%]
-tests/test_health.py::test_greeting_and_health PASSED                    [ 45%]
-tests/test_health.py::test_missing_model_fails_startup PASSED            [ 50%]
-tests/test_health.py::test_not_ready_returns_503 PASSED                  [ 54%]
-tests/test_predict.py::test_prediction_matches_direct_inference PASSED   [ 58%]
-tests/test_predict.py::test_predictions_cover_both_classes PASSED        [ 62%]
-tests/test_predict.py::test_invalid_input_rejected[change0] PASSED       [ 66%]
-tests/test_predict.py::test_invalid_input_rejected[change1] PASSED       [ 70%]
-tests/test_predict.py::test_invalid_input_rejected[change2] PASSED       [ 75%]
-tests/test_predict.py::test_invalid_input_rejected[change3] PASSED       [ 79%]
-tests/test_predict.py::test_invalid_input_rejected[change4] PASSED       [ 83%]
-tests/test_predict.py::test_invalid_input_rejected[change5] PASSED       [ 87%]
-tests/test_predict.py::test_missing_feature_rejected PASSED              [ 91%]
-tests/test_predict.py::test_unknown_category_and_reordered_fields PASSED [ 95%]
-tests/test_predict.py::test_openapi_documents_aliases PASSED             [100%]
+test_ml.py::test_metrics_known_values PASSED                             [ 10%]
+test_ml.py::test_training_learns_separable_data PASSED                   [ 20%]
+test_ml.py::test_model_round_trip_preserves_predictions PASSED           [ 30%]
+test_ml.py::test_inference_never_refits_and_handles_unknown_categories PASSED [ 40%]
+test_ml.py::test_column_order_does_not_change_features PASSED            [ 50%]
+test_ml.py::test_all_slice_counts_and_metrics_match_manual_calculation PASSED [ 60%]
+test_ml.py::test_missing_encoder_rejected PASSED                         [ 70%]
+test_ml.py::test_missing_feature_rejected PASSED                         [ 80%]
+test_ml.py::test_nonfinite_numeric_rejected PASSED                       [ 90%]
+test_ml.py::test_unknown_label_rejected PASSED                           [100%]
 
-============================== warnings summary ===============================
-.venv\Lib\site-packages\starlette\testclient.py:37
-  C:\Users\BSD\Documents\Dave\ml-model-fastapi\.venv\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
-    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 24 passed, 1 warning in 8.78s ========================
+============================= 10 passed in 22.05s =============================
 
 Exit code: 0

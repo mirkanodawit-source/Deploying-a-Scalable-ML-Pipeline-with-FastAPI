@@ -16,10 +16,11 @@ the versions in `requirements-lock.txt`.
   training from scratch, and live GET/POST requests for commit `543ea78`.
 
 Actual test and API output is preserved in `screenshots/unit_test.txt` and
-`screenshots/local_api.txt`. One upstream Starlette/AnyIO deprecation warning
+`screenshots/local_api.txt`. The three required PNG screenshots capture a fresh
+ten-test ML run, live GET/POST responses, and the passing GitHub Actions run
+for commit `828b6e8`. One upstream Starlette/AnyIO deprecation warning
 was emitted by TestClient; it did not affect test results.
 
 The Dockerfile is supplied but was not built locally because Docker is not
-installed. The required screenshot images are still pending after browser
-capture was stopped. These outstanding items must not be confused with the
-successful command-line checks above.
+installed. The PNGs are captured from a browser console displaying real command
+output and from GitHub Actions; no output was fabricated for the images.

@@ -9,9 +9,9 @@ Use actual run results and screenshots, not the examples from the assignment.
 - [x] `python -m pytest -v` passes: 24 tests, including ten ML/data tests.
 - [x] `python -m flake8 .` passes.
 - [x] `local_api.py` gets HTTP 200 for both GET and POST.
-- [ ] `screenshots/unit_test.png` shows passing tests in a terminal.
-- [ ] `screenshots/local_api.png` shows successful live GET and POST results.
-- [ ] `screenshots/continuous_integration.png` shows the passing GitHub workflow.
+- [x] `screenshots/unit_test.png` shows ten passing ML tests in the console.
+- [x] `screenshots/local_api.png` shows successful live GET and POST results.
+- [x] `screenshots/continuous_integration.png` shows the passing GitHub workflow.
 - [x] GitHub Actions passed lint, tests, training, and live API checks.
 - [x] The implementation is pushed to the public fork linked in README.md.
 - [ ] The same repository URL is entered in the submission details.
