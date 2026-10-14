@@ -10,6 +10,10 @@ the versions in `requirements-lock.txt`.
 - Flake8 passed without errors.
 - The live GET and POST both returned HTTP 200; the example prediction was `<=50K`.
 - The repository whitespace check passed.
+- GitHub Actions passed all checks on Ubuntu with Python 3.11:
+  [Census ML CI run 38528112309](https://github.com/mirkanodawit-source/Deploying-a-Scalable-ML-Pipeline-with-FastAPI/actions/runs/38528112309).
+  This independently verified dependency installation, flake8, all tests,
+  training from scratch, and live GET/POST requests for commit `543ea78`.
 
 Actual test and API output is preserved in `screenshots/unit_test.txt` and
 `screenshots/local_api.txt`. One upstream Starlette/AnyIO deprecation warning

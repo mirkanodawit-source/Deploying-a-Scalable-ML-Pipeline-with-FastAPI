@@ -12,5 +12,6 @@ Use actual run results and screenshots, not the examples from the assignment.
 - [ ] `screenshots/unit_test.png` shows passing tests in a terminal.
 - [ ] `screenshots/local_api.png` shows successful live GET and POST results.
 - [ ] `screenshots/continuous_integration.png` shows the passing GitHub workflow.
-- [ ] The completed project is pushed to the public fork linked in README.md.
+- [x] GitHub Actions passed lint, tests, training, and live API checks.
+- [x] The implementation is pushed to the public fork linked in README.md.
 - [ ] The same repository URL is entered in the submission details.
