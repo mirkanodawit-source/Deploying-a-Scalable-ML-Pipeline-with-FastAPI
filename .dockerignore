@@ -1,0 +1,16 @@
+.git
+.venv
+venv
+.env
+__pycache__
+.pytest_cache
+notebooks
+tests
+data
+.python
+.uv-cache
+.upstream
+.source
+project docs
+screenshots
+.evidence

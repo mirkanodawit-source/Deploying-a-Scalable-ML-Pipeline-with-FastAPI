@@ -1,38 +1,26 @@
-import json
+"""Exercise the live API: python local_api.py [--url http://127.0.0.1:8000]."""
+
+import argparse
 
 import requests
 
-# TODO: send a GET using the URL http://127.0.0.1:8000
-r = None # Your code here
-
-# TODO: print the status code
-# print()
-# TODO: print the welcome message
-# print()
+from app.schemas.prediction import EXAMPLE
 
 
+def run(url):
+    url = url.rstrip("/")
+    with requests.Session() as session:
+        greeting = session.get(f"{url}/", timeout=10)
+        print(f"GET Status Code: {greeting.status_code}")
+        greeting.raise_for_status()
+        print(f"Result: {greeting.json()['message']}")
+        response = session.post(f"{url}/predict", json=EXAMPLE, timeout=10)
+        print(f"POST Status Code: {response.status_code}")
+        response.raise_for_status()
+        print(f"Result: {response.json()['prediction']}")
 
-data = {
-    "age": 37,
-    "workclass": "Private",
-    "fnlgt": 178356,
-    "education": "HS-grad",
-    "education-num": 10,
-    "marital-status": "Married-civ-spouse",
-    "occupation": "Prof-specialty",
-    "relationship": "Husband",
-    "race": "White",
-    "sex": "Male",
-    "capital-gain": 0,
-    "capital-loss": 0,
-    "hours-per-week": 40,
-    "native-country": "United-States",
-}
 
-# TODO: send a POST using the data above
-r = None # Your code here
-
-# TODO: print the status code
-# print()
-# TODO: print the result
-# print()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--url", default="http://127.0.0.1:8000")
+    run(parser.parse_args().url)

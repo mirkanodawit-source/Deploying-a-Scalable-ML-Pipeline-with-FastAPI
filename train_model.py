@@ -1,87 +1,75 @@
-import os
+"""Run the reproducible train/test pipeline: python train_model.py."""
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from ml.data import process_data
+from ml.data import CATEGORICAL_FEATURES, clean_data, process_data
 from ml.model import (
-    compute_model_metrics,
-    inference,
-    load_model,
-    performance_on_categorical_slice,
-    save_model,
-    train_model,
+    compute_model_metrics, inference, performance_on_categorical_slice,
+    save_model, train_model,
 )
-# TODO: load the cencus.csv data
-project_path = "Your path here"
-data_path = os.path.join(project_path, "data", "census.csv")
-print(data_path)
-data = None # your code here
 
-# TODO: split the provided data to have a train dataset and a test dataset
-# Optional enhancement, use K-fold cross validation instead of a train-test split.
-train, test = None, None# Your code here
+ROOT = Path(__file__).resolve().parent
 
-# DO NOT MODIFY
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
 
-# TODO: use the process_data function provided to process the data.
-X_train, y_train, encoder, lb = process_data(
-    # your code here
-    # use the train dataset 
-    # use training=True
-    # do not need to pass encoder and lb as input
+def run_pipeline(data_path=ROOT / "data/census.csv", output_dir=ROOT / "model"):
+    """Fit only on training rows and write artifacts and held-out metrics."""
+    data_path, output_dir = Path(data_path), Path(output_dir)
+    data = clean_data(pd.read_csv(data_path))
+    train, test = train_test_split(
+        data, test_size=0.2, random_state=42, stratify=data["salary"],
     )
-
-X_test, y_test, _, _ = process_data(
-    test,
-    categorical_features=cat_features,
-    label="salary",
-    training=False,
-    encoder=encoder,
-    lb=lb,
-)
-
-# TODO: use the train_model function to train the model on the training dataset
-model = None # your code here
-
-# save the model and the encoder
-model_path = os.path.join(project_path, "model", "model.pkl")
-save_model(model, model_path)
-encoder_path = os.path.join(project_path, "model", "encoder.pkl")
-save_model(encoder, encoder_path)
-
-# load the model
-model = load_model(
-    model_path
-) 
-
-# TODO: use the inference function to run the model inferences on the test dataset.
-preds = None # your code here
-
-# Calculate and print the metrics
-p, r, fb = compute_model_metrics(y_test, preds)
-print(f"Precision: {p:.4f} | Recall: {r:.4f} | F1: {fb:.4f}")
-
-# TODO: compute the performance on model slices using the performance_on_categorical_slice function
-# iterate through the categorical features
-for col in cat_features:
-    # iterate through the unique values in one categorical feature
-    for slicevalue in sorted(test[col].unique()):
-        count = test[test[col] == slicevalue].shape[0]
-        p, r, fb = performance_on_categorical_slice(
-            # your code here
-            # use test, col and slicevalue as part of the input
+    X_train, y_train, encoder, lb = process_data(train, label="salary")
+    X_test, y_test, _, _ = process_data(
+        test, label="salary", training=False, encoder=encoder, lb=lb,
+    )
+    model = train_model(X_train, y_train)
+    precision, recall, f1 = compute_model_metrics(y_test, inference(model, X_test))
+    for name, artifact in [("model", model), ("encoder", encoder), ("lb", lb)]:
+        save_model(artifact, output_dir / f"{name}.pkl")
+        print(f"Saved {output_dir / (name + '.pkl')}")
+    slices = []
+    for feature in CATEGORICAL_FEATURES:
+        slices.extend(performance_on_categorical_slice(
+            test, model, encoder, lb, feature,
+        ))
+    metrics = {
+        "precision": float(precision), "recall": float(recall), "f1": float(f1),
+        "train_rows": len(train), "test_rows": len(test),
+        "positive_test_rows": int(y_test.sum()), "random_state": 42,
+        "data_sha256": hashlib.sha256(
+            data_path.read_bytes().replace(b"\r\n", b"\n")
+        ).hexdigest(),
+        "slices": slices,
+    }
+    (output_dir / "metrics.json").write_text(
+        json.dumps(metrics, indent=2) + "\n", encoding="utf-8",
+    )
+    lines = ["Held-out test slices; positive class >50K; undefined metrics = 0."]
+    for row in slices:
+        lines.append(
+            f"{row['feature']}: {row['value']}, Count: {row['count']}, "
+            f"Positive count: {row['positive_count']}\n"
+            f"Precision: {row['precision']:.4f} | Recall: {row['recall']:.4f} | "
+            f"F1: {row['f1']:.4f}"
         )
-        with open("slice_output.txt", "a") as f:
-            print(f"{col}: {slicevalue}, Count: {count:,}", file=f)
-            print(f"Precision: {p:.4f} | Recall: {r:.4f} | F1: {fb:.4f}", file=f)
+    (output_dir.parent / "slice_output.txt").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8",
+    )
+    print(f"Precision: {precision:.4f} | Recall: {recall:.4f} | F1: {f1:.4f}")
+    print(f"Training rows: {len(train)} | Test rows: {len(test)}")
+    print(f"Evaluated {len(slices)} categorical slices")
+    return metrics
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path, default=ROOT / "data/census.csv")
+    parser.add_argument("--output-dir", type=Path, default=ROOT / "model")
+    args = parser.parse_args()
+    run_pipeline(args.data, args.output_dir)

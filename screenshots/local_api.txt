@@ -1,0 +1,8 @@
+Command: python local_api.py
+
+GET Status Code: 200
+Result: Hello from the Census income prediction API!
+POST Status Code: 200
+Result: <=50K
+
+Exit code: 0
